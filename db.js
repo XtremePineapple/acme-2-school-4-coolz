@@ -23,10 +23,10 @@ const sink = async() => {
             CHECK (char_length(name) > 0)
         );
     `
-    console.log(SQL)
+    // console.log(SQL)
     client.query(SQL);
     //school_id UUID REFERENCES schools(id),
-    const [ SDSU, UCSD, USD, UCSDSUSD, Sam, Brian, Suzie, Nina ] = await Promise.all([
+    await Promise.all([
         createSchool({name:'SDSU'}),
         createSchool({name:'USD'}),
         createSchool({name:'UCSD'}),

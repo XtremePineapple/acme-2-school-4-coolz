@@ -4,14 +4,15 @@ const express = require('express')
 const app = express();
 const path = require('path');
 const db = require('./db');
-
+ 
 app.use(express.json());
 app.use('/assets', express.static(path.join(__dirname, 'assets')));
 app.use('/dist', express.static(path.join(__dirname, 'dist')));
-
+ 
 app.get('/', (req, res, next) => {
   res.sendFile(path.join(__dirname, 'index.html'));
 });
+
 
 app.get('/api/students', (req, res, next)=> {
   db.readStudents()
@@ -24,6 +25,7 @@ app.get('/api/schools', (req, res, next)=> {
     .catch(next);
 });
 
+
 app.post('/api/students', (req, res, next) => {
   db.createStudent(req.body)
     .then( thing => res.send(thing))
@@ -35,6 +37,7 @@ app.post('/api/schools', (req, res, next) => {
     .catch( next )
 });
 
+ 
 app.delete('/api/students/:id', (req, res, next) => {
   db.destroySchool(req.params.id)
     .then( () => res.sendStatus(204))
