@@ -57,5 +57,9 @@ form > * {
   margin: 1rem;
 }
 
+li {
+  font-size: 18px;
+}
+
 /* section {
 } */

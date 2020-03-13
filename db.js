@@ -27,28 +27,31 @@ const sink = async() => {
     client.query(SQL);
     //school_id UUID REFERENCES schools(id),
     await Promise.all([
-        createSchool({name:'SDSU'}),
-        createSchool({name:'USD'}),
-        createSchool({name:'UCSD'}),
-        createSchool({name:'UCSDSUSD'}),
-        createStudent({name:'Sam'}),
-        createStudent({name:'Brian'}),
-        createStudent({name:'Suzie'}),
-        createStudent({name:'Nina'})
+        createSchool('SDSU'),
+        createSchool('USD'),
+        createSchool('UCSD'),
+        createSchool('UCSDSUSD'),
+        createStudent('Sam'),
+        createStudent('Brian'),
+        createStudent('Suzie'),
+        createStudent('Nina')
     ])
-    // Promise.all([
+    // await Promise.all([
 
     // ])
 }
 
 const createSchool = async( school ) => {
+    console.log(school)
     const SQL = `INSERT INTO schools(name) values($1) returning *`;
     return (await client.query(SQL, [ school ])).rows[0];
 }
 const createStudent = async( student) => {
+    console.log(student)
     const SQL = `INSERT INTO students(name) values($1) returning *`;
     return (await client.query(SQL, [ student ])).rows[0];
 }
+
 
 const readSchools = async() => {
     const SQL = `SELECT * from schools`

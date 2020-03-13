@@ -6,6 +6,9 @@ import axios from 'axios'
 import SchoolForm from './SchoolForm'
 import StudentForm from './StudentForm'
 
+import SchoolList from './SchoolList'
+import StudentList from './StudentList'
+
 const App = () => {
     console.log("App func")
 
@@ -33,7 +36,7 @@ const App = () => {
             setError(ex.response.data.message) 
         }
     }
-    
+
     useEffect(()=> {
         Promise.all([
           axios.get('/api/schools'), 
@@ -57,6 +60,10 @@ const App = () => {
         <div className='forms'>
             <SchoolForm createSchool = { createSchool }/>
             <StudentForm createStudent = { createStudent }/>
+        </div>
+        <div className='lists'>
+            <SchoolList schools = { schools }/>
+            <StudentList students = { students }/>
         </div>
     </div>)
 }
