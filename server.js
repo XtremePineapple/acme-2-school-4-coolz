@@ -13,11 +13,39 @@ app.get('/', (req, res, next) => {
   res.sendFile(path.join(__dirname, 'index.html'));
 });
 
-app.get('/api/users', (req, res, next)=> {
-  db.readUsers()
-    .then( users => res.send(users))
+app.get('/api/students', (req, res, next)=> {
+  db.readStudents()
+    .then( student => res.send(student))
     .catch(next);
 });
+app.get('/api/schools', (req, res, next)=> {
+  db.readSchools()
+    .then( school => res.send(school))
+    .catch(next);
+});
+
+app.post('/api/students', (req, res, next) => {
+  db.createStudent(req.body)
+    .then( thing => res.send(thing))
+    .catch(next)
+});
+app.post('/api/schools', (req, res, next) => {
+  db.createSchool(req.body)
+    .then( () => res.sendStatus(204))
+    .catch( next )
+});
+
+app.delete('/api/students/:id', (req, res, next) => {
+  db.destroySchool(req.params.id)
+    .then( () => res.sendStatus(204))
+    .catch( next )
+});
+app.delete('/api/schools/:id', (req, res, next) => {
+  db.destroySchool(req.params.id)
+    .then( () => res.sendStatus(204))
+    .catch( next )
+});
+
 
 app.use((req, res, next)=> {
   next({
@@ -25,7 +53,6 @@ app.use((req, res, next)=> {
     message: `Page not found for ${req.method} ${req.url}`
   })
 });
-
 app.use((err, req, res, next)=> {
   res.status(err.status || 500).send({
     message: err.message || JSON.stringify(err)
