@@ -12,7 +12,7 @@ app.use('/dist', express.static(path.join(__dirname, 'dist')));
 app.get('/', (req, res, next) => {
   res.sendFile(path.join(__dirname, 'index.html'));
 });
-
+ 
 
 app.get('/api/students', (req, res, next)=> {
   db.readStudents()
@@ -27,13 +27,14 @@ app.get('/api/schools', (req, res, next)=> {
 
 
 app.post('/api/students', (req, res, next) => {
+  console.log(req.body)
   db.createStudent(req.body)
     .then( thing => res.send(thing))
     .catch(next)
 });
 app.post('/api/schools', (req, res, next) => {
   db.createSchool(req.body)
-    .then( () => res.sendStatus(204))
+    .then( thing => res.send(thing))
     .catch( next )
 });
 
@@ -62,7 +63,7 @@ app.use((err, req, res, next)=> {
   });
 });
 
-const port = process.env.PORT || 3002;
+const port = process.env.PORT || 3005;
 
 db.sink()
   .then(()=> {

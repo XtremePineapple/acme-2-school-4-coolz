@@ -16,46 +16,52 @@ const sink = async() => {
             name VARCHAR(255) NOT NULL UNIQUE,
             CHECK (char_length(name) > 0)
         );
-        CREATE TABLE students(
+        CREATE TABLE students( 
             id UUID PRIMARY KEY default uuid_generate_v4(),
-            
+            "schoolID" UUID REFERENCES schools(id),
             name VARCHAR(255) NOT NULL UNIQUE,
             CHECK (char_length(name) > 0)
         );
+
     `
+    //
     // console.log(SQL)
     client.query(SQL);
-    //school_id UUID REFERENCES schools(id),
-    await Promise.all([
-        createSchool('SDSU'),
-        createSchool('USD'),
-        createSchool('UCSD'),
-        createSchool('UCSDSUSD'),
-        createStudent('Sam'),
-        createStudent('Brian'),
-        createStudent('Suzie'),
-        createStudent('Nina')
-    ])
-    // await Promise.all([
 
-    // ])
+    const [SDSU, USD, UCSD, UCSDSUSD] = await Promise.all([
+        createSchool({name:'SDSU'}),
+        createSchool({name:'USD'}),
+        createSchool({name:'UCSD'}),
+        createSchool({name:'UCSDSUSD'}),
+    ])
+    await Promise.all([
+        createStudent({name:'Sam'}, SDSU),
+        createStudent({name:'Brian'}, USD),
+        createStudent({name:'Suzie'}, UCSD),
+        createStudent({name:'Calvin'}, UCSDSUSD)
+    ])
+    //const [Sam, Brian, Suzie, Calvin] = 
+    // console.log(Sam)
+    // console.log(Brian)
+    // console.log(Suzie)
+    // console.log(Calvin)
 }
 
 const createSchool = async( school ) => {
     console.log(school)
     const SQL = `INSERT INTO schools(name) values($1) returning *`;
-    return (await client.query(SQL, [ school ])).rows[0];
+    return (await client.query(SQL, [ school.name ])).rows[0];
 }
-const createStudent = async( student) => {
-    console.log(student)
-    const SQL = `INSERT INTO students(name) values($1) returning *`;
-    return (await client.query(SQL, [ student ])).rows[0];
+const createStudent = async( student, schoolChoice ) => {
+    console.log(schoolChoice) 
+    const SQL = `INSERT INTO students(name, "schoolID") values($1, $2) returning *`;
+    return (await client.query(SQL, [ student.name, schoolChoice.id])).rows[0];
 }
 
 
 const readSchools = async() => {
     const SQL = `SELECT * from schools`
-    return (await client.query(SQL)).rows;
+    return (await client.query(SQL)).rows; 
 }
 const readStudents = async() => {
     const SQL = `SELECT * from students`
